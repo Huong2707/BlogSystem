@@ -16,8 +16,7 @@ namespace BlogSystem.Application.DTOs
 
 
         [Required(ErrorMessage ="Password is required")]
-        [MinLength(8,ErrorMessage ="Password must be at least 8 charaters")]
-        [RegularExpression(@"^()?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$",ErrorMessage ="Password not strength")]
+       
         public string Password { get; set; }
 
 

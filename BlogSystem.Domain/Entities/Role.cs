@@ -10,8 +10,9 @@ namespace BlogSystem.Domain.Entities
     {
         public int RoleId { get; set; }
         public string RoleName { get; set; }
-        public string DescriptionRole { get; set; }
+        public string? DescriptionRole { get; set; }
 
         public virtual ICollection<UserRole> UserRole { get; set; }
+
     }
 }

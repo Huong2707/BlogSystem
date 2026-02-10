@@ -21,12 +21,7 @@ namespace BlogSystem.API.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
-            return Ok(new
-            {
-                success = true,
-                data = request,
-                message = "Login successful"
-            });
+           
             try
             {
                 _logger.LogInformation("Login attempt for email: {Email}",request.Email);
@@ -42,7 +37,7 @@ namespace BlogSystem.API.Controllers
             }
             catch(UnauthorizedAccessException ex)
             {
-                _logger.LogWarning("Login failed for email: {Email} . Error:{Error",request.Email,ex.Message.ToString());
+                _logger.LogWarning("Login failed for email: {Email} . Error:{Error}",request.Email,ex.Message.ToString());
                 return Unauthorized(new 
                 {
                     success=false,
@@ -69,5 +64,48 @@ namespace BlogSystem.API.Controllers
                 });
             }
         }
+
+        [HttpPost("register")]
+        [ProducesResponseType(typeof(UserDto), 200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<UserDto>> Register(RegisterRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("create an account with email:{Email}",request.Email);
+                var user=await _authService.RegisterAsync(request);
+                _logger.LogInformation("Register successful for user ID :{UserID}",user.UserId);
+                return Ok(new {
+                    success= true,
+                    data = user,
+                    message = "Register successful"
+                }
+                    );
+            }
+            catch(ArgumentException ex)
+            {
+                _logger.LogWarning("Register failed for email:{Email}- error:{Error}",request.Email,ex.Message.ToString());
+                return BadRequest(new {
+                    success = false,
+                    info="loi tham so",
+                    message =ex.Message.ToString()
+                });
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during registration for email: {Email}", request.Email);
+                return StatusCode(500, new 
+                {
+                    success=false,
+                    message=ex.Message.ToString(),
+                    info="loi khong the tao duoc tai khoan"
+                });
+            }
+
+
+        }
+
     }
 }

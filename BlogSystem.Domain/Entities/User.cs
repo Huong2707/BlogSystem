@@ -16,8 +16,9 @@ namespace BlogSystem.Domain.Entities
         public string? Bio { get; set; }
         public byte IsActive { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; } 
+        public virtual ICollection<UserRole> UserRole { get; set; }
+
     }
 }

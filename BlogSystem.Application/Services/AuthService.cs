@@ -66,7 +66,7 @@ namespace BlogSystem.Application.Services
             //tao token dua tren thong tin tai khoan nguoi dung
             //tra du lieu nguoi dung, cac thong tin nhay cam ma hoa dua vao token
             var token = GenerateJwtToken(user);
-            var roles = user.UserRoles?.Select(ur=>ur.Role.RoleName).ToList() ?? new List<string>();
+            var roles = user.UserRole?.Select(ur=>ur.Role.RoleName).ToList() ?? new List<string>();
             return new LoginResponse
             { 
                 Token=token,
@@ -173,9 +173,9 @@ namespace BlogSystem.Application.Services
                 new Claim(ClaimTypes.Name,user.FullName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
-            if(user.UserRoles != null)
+            if(user.UserRole != null)
             {
-                foreach(var role in user.UserRoles)
+                foreach(var role in user.UserRole)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role.Role.RoleName));
                 }

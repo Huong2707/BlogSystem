@@ -26,7 +26,7 @@ namespace BlogSystem.Infrastructure.Persistence.Repositories
         public async Task AssignDefaultRoleAsync(int userId)
         {
             var guestRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "Editor");//lay role mac dinh de gan vao tai khoan
-            if(guestRole != null)
+            if (guestRole != null)
             {
                 //insert vao bang Userole
                 var userRole = new UserRole
@@ -47,7 +47,7 @@ namespace BlogSystem.Infrastructure.Persistence.Repositories
         public async Task<User> GetByIdAsync(int id)
         {
             return await _context.Users
-           .Include(u => u.UserRoles)
+           .Include(u => u.UserRole)
            .ThenInclude(ur => ur.Role)
            .FirstOrDefaultAsync(u => u.UserId == id && u.IsActive == 1);
 
@@ -56,7 +56,7 @@ namespace BlogSystem.Infrastructure.Persistence.Repositories
         public async Task<User> GetByEmailAsync(string email)
         {
             return await _context.Users
-                       .Include(u => u.UserRoles)
+                       .Include(u => u.UserRole)
                        .ThenInclude(ur => ur.Role)
                        .FirstOrDefaultAsync(u => u.Email == email && u.IsActive == 1);
         }
@@ -69,9 +69,10 @@ namespace BlogSystem.Infrastructure.Persistence.Repositories
         public async Task<User> GetUserWithRoleAsync(int userId)
         {
             return await _context.Users
-            .Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive == 1);
+                    .Include(u => u.UserRole)
+                    .ThenInclude(r => r.Role)
+                    .FirstOrDefaultAsync(u => u.UserId == userId && u.IsActive == 1);
+
         }
 
         public async Task UpdateAsync(User user)

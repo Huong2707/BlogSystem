@@ -22,8 +22,8 @@ namespace BlogSystem.Application.Mapping
                 .ForMember(dest => dest.Bio, opt => opt.MapFrom(src => src.Bio))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.Roles, opt => opt.MapFrom(
-                    src => src.UserRoles != null
-                    ? src.UserRoles.Select(ur => ur.Role.RoleName).ToList() 
+                    src => src.UserRole != null
+                    ? src.UserRole.Select(ur => ur.Role.RoleName).ToList() 
                     : new List<string>()
                     ));
 
