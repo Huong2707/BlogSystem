@@ -54,11 +54,18 @@ namespace BlogSystem.Application.Services
                 throw new UnauthorizedAccessException("Email or password invalid");
 
             }
-            if(!user.PasswordHash.Equals(request.Password))
+            //if(!user.PasswordHash.Equals(request.Password))
+            //{
+            //    throw new UnauthorizedAccessException("Email or password invalid");
+            //}
+
+
+            //  xu ly phan ma hoa MK
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 throw new UnauthorizedAccessException("Email or password invalid");
             }
-            // sau nay se xu ly phan ma hoa MK
+
             if(user.IsActive ==0)
             {
                 throw new UnauthorizedAccessException("Account is blocked");
@@ -144,7 +151,14 @@ namespace BlogSystem.Application.Services
 
                 }, out SecurityToken validatedToken);
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value); 
+                var userIdClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier || x.Type=="nameid");
+                if (userIdClaim == null)
+                {
+                    return new ValidateTokenResponse { IsValid = false };
+                }
+
+                var userId = int.Parse(userIdClaim.Value);
+
                 var user= await _userRepository.GetUserWithRoleAsync(userId);
                 if(user == null)
                 {
@@ -156,9 +170,9 @@ namespace BlogSystem.Application.Services
                     User = _mapper.Map<UserDto>(user)
                 };
             }
-            catch
+            catch (Exception ex)
             {
-                return new ValidateTokenResponse { IsValid = false };
+                return new ValidateTokenResponse { IsValid = false,ErrorMessage =ex.Message.ToString() };
             }
         }
 

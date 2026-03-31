@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BlogSystem.Application.DTOs;
+using BlogSystem.Application.DTOs.Categories;
 using BlogSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,16 @@ namespace BlogSystem.Application.Mapping
                     : new List<string>()
                     ));
 
-
+            //map category -> categoryDto
+            CreateMap<Category, CategoryDto>()
+                .ForMember(c => c.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+                .ForMember(c => c.CategoryName, opt => opt.MapFrom(src => src.CategoryName))
+                .ForMember(c => c.CategorySlug, opt => opt.MapFrom(src => src.CateSlug))
+                .ForMember(c => c.Description, opt => opt.MapFrom(src => src.CategoryDescription))
+             .ForMember(c => c.IsActive, opt => opt.MapFrom(src => src.IsActive))
+             .ForMember(c => c.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
         }
+
+
     }
 }

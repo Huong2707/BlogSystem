@@ -26,6 +26,7 @@ namespace BlogSystem.Infrastructure
                     );
             });
             services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<ICategoryRepository, CategoryReponsitory>();
             return services;
         }
     }

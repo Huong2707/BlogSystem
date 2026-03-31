@@ -1,7 +1,10 @@
 using BlogSystem.API.Middleware;
+using BlogSystem.Application.Features.Categories.Commands;
+using BlogSystem.Application.Features.Categories.Queries;
 using BlogSystem.Application.Mapping;
 using BlogSystem.Application.Services;
 using BlogSystem.Infrastructure;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +34,16 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 //config Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAutoMapper(cf => cf.AddProfile<MappingProfile>());
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(CategoryHandler)
+        .Assembly);
+    
+
+});
+builder.Services.AddValidatorsFromAssemblyContaining<CategoryValidator>();
+
 builder.Services.AddServiceApplication();
 
 var jwtSetting = builder.Configuration.GetSection("Jwt");

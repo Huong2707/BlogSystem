@@ -1,5 +1,6 @@
 ﻿using BlogSystem.Application.DTOs;
 using BlogSystem.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogSystem.API.Controllers
@@ -107,5 +108,42 @@ namespace BlogSystem.API.Controllers
 
         }
 
+        [Authorize]
+        [HttpPost("validate-token")]
+        [ProducesResponseType(typeof(ValidateTokenResponse), 200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<ValidateTokenResponse>> ValidateToken()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString().Trim(); 
+                var response = await _authService.ValidateTokenAsync(token);
+                if(!response.IsValid)
+                {
+                    return Unauthorized(new 
+                    {
+                        success=false,
+                        message="Invalid token or Expried Token"
+                    });
+                }
+                return Ok(new
+                {
+                    success = true,
+                    data = response,
+                    message = "Token is valid"
+                });
+
+
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new 
+                {
+                    success=false,
+                    message=ex.Message.ToString()
+                });
+            }
+        }
+        
     }
 }

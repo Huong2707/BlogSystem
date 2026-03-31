@@ -11,5 +11,7 @@ namespace BlogSystem.Application.DTOs
         public bool IsValid { get; set; }
         public UserDto User { get; set; }
 
+        public string? ErrorMessage { get; set; }
+
     }
 }

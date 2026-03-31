@@ -17,6 +17,9 @@ namespace BlogSystem.Infrastructure.Persistence.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -29,7 +32,15 @@ namespace BlogSystem.Infrastructure.Persistence.Context
             modelBuilder.Entity<Role>().HasIndex(r => r.RoleName).IsUnique();
 
             modelBuilder.Entity<User>().Property(u => u.IsActive).HasDefaultValue((byte)1);
-            modelBuilder.Entity<User>().Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<User>().Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE");
+
+            modelBuilder.Entity<Category>().ToTable("Categories");
+            modelBuilder.Entity<Category>().HasIndex(c => c.CategoryName).IsUnique();
+            modelBuilder.Entity<Category>().HasIndex(c => c.CateSlug).IsUnique();
+            modelBuilder.Entity<Category>().Property(u => u.IsActive).HasDefaultValue((byte)1);
+            modelBuilder.Entity<Category>().Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE");
+
+
 
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

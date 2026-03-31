@@ -13,6 +13,7 @@ namespace BlogSystem.Application.Services
         public static IServiceCollection AddServiceApplication(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             return services;
 
         }
